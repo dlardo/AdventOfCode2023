@@ -1,15 +1,15 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Day1 {
     // 54983 too low
     // 55002 too low
     // 55739 too high
-    ArrayList<String> data;
+    AoC aoc = new AoC();
+    ArrayList<String> data = aoc.getFile("data/day1sample.txt");
     long total = 0;
 
     ArrayList<String> engDigits = new ArrayList<>(
@@ -17,28 +17,68 @@ public class Day1 {
                       "five", "six", "seven", "eight", "nine"));
 
     public Day1() {
-        data = getFile("data/day1sample.txt");
         int subTotal;
         for (String line : data) {
+            TreeMap<Integer, Integer> combinedDigits = new TreeMap<>();
             System.out.println("");
+            
+            for (Map.Entry<Integer, Integer> entry : getWordDigits(line).entrySet()) {
+                combinedDigits.put(entry.getKey(), entry.getValue());
+            }
+
+            for (Map.Entry<Integer, Integer> entry : getDigitDigits(line).entrySet()) {
+                combinedDigits.put(entry.getKey(), entry.getValue());
+            }
+
+            System.out.println("Found Digits: " + combinedDigits);
             System.out.println("Line: [" + line + "]");
-            System.out.println("First: " + getFirst(line) + 
-                               " Last: " + getLast(line));
-            subTotal = getFirst(line) * 10 + getLast(line);
+            int first = combinedDigits.firstEntry().getValue();
+            int last = combinedDigits.lastEntry().getValue();
+            System.out.println("First: " + first + 
+                               " Last: " + last);
+            subTotal = first * 10 + last;
             System.out.println("SubTotal: " + subTotal);
             total += subTotal;
-            
         }
     }
 
-    public int getFirst(String s) {
-        int a = getFirstDigit(s);
-        int b = getFirstWordWithDigit(s);
-        return Math.min(a,b);
+    // returns HashMap<Location, Value>
+    public HashMap<Integer, Integer> getWordDigits(String s) {
+        HashMap<Integer, Integer> result = new HashMap<Integer, Integer>();
+        // for each digit word
+        for (int i = 1; i < engDigits.size(); i++) {
+            int start = 0;
+            // search through the string, noting every instance of the word
+            while (start < s.length()) {
+                int foundAt = s.indexOf(engDigits.get(i), start);
+                if (foundAt >= 0) {
+                    result.put(foundAt, i);
+                    start = foundAt + 1;
+                } else {
+                    start = s.length();
+                }
+            }
+        }
+        return result;
     }
 
-    public int getLast(String s) {
-        return Math.min(getLastWordWithDigit(s), getLastDigit(s));
+    public HashMap<Integer, Integer> getDigitDigits(String s) {
+        HashMap<Integer, Integer> result = new HashMap<Integer, Integer>();
+        // for each digit 0-9
+        for (int i = 0; i < 10; i++) {
+            int start = 0;
+            // search through the string, noting every instance of the digit
+            while (start < s.length()) {
+                int foundAt = s.indexOf(Integer.toString(i), start);
+                if (foundAt >= 0) {
+                    result.put(foundAt, i);
+                    start = foundAt + 1;
+                } else {
+                    start = s.length();
+                }
+            }
+        }
+        return result;
     }
 
     public int getFirstWordWithDigit(String s) {
@@ -64,7 +104,7 @@ public class Day1 {
         }
         return Integer.MAX_VALUE;
     }
-    
+
     public int getFirstDigit(String s) {
         for (int i = 0; i < s.length(); i++) {
             char a = s.charAt(i);
@@ -85,30 +125,6 @@ public class Day1 {
             }
         }
         return Integer.MAX_VALUE;
-    }
-
-    public ArrayList<String> getFile(String filename) {
-        return getFile(filename, Integer.MAX_VALUE);
-    }
-
-    public ArrayList<String> getFile(String filename, int limit) {
-        ArrayList<String> result = new ArrayList<>();
-        try {   
-            File inputFile = new File(filename);
-            FileReader fR = new FileReader(inputFile);
-            BufferedReader reader = new BufferedReader(fR);
-
-            String line;
-            while ((line = reader.readLine()) != null && limit > 0) {
-                // System.out.println(line);
-                result.add(line);
-                limit--;
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     public long getResult() {
