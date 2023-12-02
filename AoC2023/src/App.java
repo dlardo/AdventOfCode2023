@@ -5,6 +5,7 @@ public class App {
          * System.out.println("Day1: " + d1.getResult());
          */
         Day2 d2 = new Day2();
-        System.out.println("Day2: " + d2.getResult());
+        System.out.println("Day2 P1: " + d2.getResult());
+        System.out.println("Day2 P2: " + d2.getPart2Result());
     }
 }

@@ -5,26 +5,40 @@ public class Day2 {
     AoC aoc = new AoC();
     ArrayList<String> data = aoc.getFile("AoC2023/data/day2.txt");
     int total = 0;
+    int totalPower = 0;
+
     public Day2() {
         for (int i = 0; i < data.size(); i++) {
             int game_id = i + 1;
             String line = data.get(i);
-            HashMap<String, Integer> game = getHighestPulls(line);
+            HashMap<String, Integer> game = validateGame(getHighestPulls(line));
             System.out.println("Highest Pulls for game " + game_id + ": " + game);
             if (isValidGame(game)) total += game_id;
+
+            // Part 2
+            int gp = calcGamePower(game);
+            System.out.println("Game Power: " + gp);
+            totalPower += gp;
         }
     }
 
-    private Boolean isValidGame(HashMap<String,Integer> game) {
+    private HashMap<String,Integer> validateGame(HashMap<String,Integer> game) {
         if (!game.containsKey("red")) game.put("red", 0);
         if (!game.containsKey("blue")) game.put("blue", 0);
         if (!game.containsKey("green")) game.put("green", 0);
+        return game;
+    }
 
+    private Boolean isValidGame(HashMap<String,Integer> game) {
         if(game.get("red") > 12) return false;
         if(game.get("blue") > 14) return false;
         if(game.get("green") > 13) return false;
 
         return true;
+    }
+
+    private int calcGamePower(HashMap<String, Integer> game) {
+        return game.get("red") * game.get("green") * game.get("blue");
     }
 
     private HashMap<String, Integer> getHighestPulls(String s) {
@@ -50,5 +64,9 @@ public class Day2 {
 
     public int getResult() {
         return total;
+    }
+
+    public int getPart2Result() {
+        return totalPower;
     }
 }
