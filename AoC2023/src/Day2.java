@@ -13,8 +13,8 @@ public class Day2 {
         }
     }
 
-    private HashMap<String,Integer> getHighestPulls(String s) {
-        HashMap<String,Integer> result = new HashMap<>();
+    private HashMap<String, Integer> getHighestPulls(String s) {
+        HashMap<String, Integer> result = new HashMap<>();
         s = s.substring(s.indexOf(":") + 2, s.length());
 
         String[] splits = s.split("; ");

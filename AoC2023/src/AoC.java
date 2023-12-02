@@ -12,7 +12,7 @@ public class AoC {
 
     public ArrayList<String> getFile(String filename, int limit) {
         ArrayList<String> result = new ArrayList<>();
-        try {   
+        try {
             File inputFile = new File(filename);
             FileReader fR = new FileReader(inputFile);
             BufferedReader reader = new BufferedReader(fR);

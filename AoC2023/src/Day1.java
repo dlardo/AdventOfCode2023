@@ -11,15 +11,15 @@ public class Day1 {
     long total = 0;
 
     ArrayList<String> engDigits = new ArrayList<>(
-        Arrays.asList("zero", "one", "two", "three", "four", 
-                      "five", "six", "seven", "eight", "nine"));
+            Arrays.asList("zero", "one", "two", "three", "four",
+                    "five", "six", "seven", "eight", "nine"));
 
     public Day1() {
         int subTotal;
         for (String line : data) {
             TreeMap<Integer, Integer> combinedDigits = new TreeMap<>();
             System.out.println("");
-            
+
             for (Map.Entry<Integer, Integer> entry : getWordDigits(line).entrySet()) {
                 combinedDigits.put(entry.getKey(), entry.getValue());
             }
@@ -32,8 +32,8 @@ public class Day1 {
             System.out.println("Line: [" + line + "]");
             int first = combinedDigits.firstEntry().getValue();
             int last = combinedDigits.lastEntry().getValue();
-            System.out.println("First: " + first + 
-                               " Last: " + last);
+            System.out.println("First: " + first +
+                    " Last: " + last);
             subTotal = first * 10 + last;
             System.out.println("SubTotal: " + subTotal);
             total += subTotal;
