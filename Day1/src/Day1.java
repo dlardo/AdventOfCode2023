@@ -5,11 +5,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Day1 {
-    // 54983 too low
-    // 55002 too low
-    // 55739 too high
+    // Part 2 answer: 55652
     AoC aoc = new AoC();
-    ArrayList<String> data = aoc.getFile("data/day1sample.txt");
+    ArrayList<String> data = aoc.getFile("data/day1.txt");
     long total = 0;
 
     ArrayList<String> engDigits = new ArrayList<>(
@@ -79,52 +77,6 @@ public class Day1 {
             }
         }
         return result;
-    }
-
-    public int getFirstWordWithDigit(String s) {
-        for (int i = 3; i < s.length(); i++) {
-            String g = s.substring(0, i + 1);
-            for (int j = 1; j < engDigits.size(); j++) {
-                if (g.contains(engDigits.get(j))) {
-                    return j;
-                }
-            }
-        }
-        return Integer.MAX_VALUE;
-    }
-
-    public int getLastWordWithDigit(String s) {
-        for (int i = s.length() - 3; i >= 0; i--) {
-            String g = s.substring(0, i + 1);
-            for (int j = 1; j < engDigits.size(); j++) {
-                if (g.contains(engDigits.get(j))) {
-                    return j;
-                }
-            }
-        }
-        return Integer.MAX_VALUE;
-    }
-
-    public int getFirstDigit(String s) {
-        for (int i = 0; i < s.length(); i++) {
-            char a = s.charAt(i);
-            if (a > 47 && a < 58) {   // 0 = char 48, 9 = char 57
-                // System.out.println("First: " + a + ":" + (short)a);
-                return (int) (a - 48);
-            }
-        }
-        return Integer.MAX_VALUE;
-    }
-
-    public int getLastDigit(String s) {
-        for (int i = s.length() - 1; i >= 0; i--) {
-            char a = s.charAt(i);
-            if (a > 47 && a < 58) {   // 0 = char 48, 9 = char 57
-                // System.out.println("Last:" + a + ":" + (short)a);
-                return (int) (a - 48);
-            }
-        }
-        return Integer.MAX_VALUE;
     }
 
     public long getResult() {
