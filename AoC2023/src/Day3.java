@@ -1,32 +1,38 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Day3 {
   String day = "day3";
   AoC aoc = new AoC();
-  //ArrayList<String> data = aoc.getFile("data/" + day + "sample.txt");
-  ArrayList<String> data = aoc.getFile("data/" + day + ".txt");
+  ArrayList<String> data = aoc.getFile("data/" + day + "sample.txt");
+  //ArrayList<String> data = aoc.getFile("data/" + day + ".txt");
   public static Character NULLCHAR = (char) 0;
   Day3Grid grid = new Day3Grid();
   int partNumberSum = 0;
+  long gearRatioSum = 0;
 
   public Day3 () {
     System.out.println("Happy " + day + "!");
     buildGrid();
+    calcValidParts();
+    calcValidGears();
 
-    // Find Valid Parts
+  }
+
+  private void calcValidParts() {
     boolean validPart = false;
     ArrayList<Character> num = new ArrayList<Character>();
     for (int y = 0; y < grid.length(); y++) {
       for (int x = 0; x < grid.width(); x++) {
         char c = grid.getNodeValue(x, y);
-        if (isDigit(c)) {
+        if (grid.isDigit(c)) {
           num.add(c);
-          if (adjacentToSpecial(x, y)) {
+          if (grid.adjacentToSpecial(x, y)) {
             validPart = true;
           }
         // number is finished / NaN
         } else if (num.size() > 0 && validPart) {
-          partNumberSum += getPartNumber(num);
+          partNumberSum += charArrayListToInteger(num);
           num.clear();
           validPart = false;
         } else {
@@ -37,22 +43,57 @@ public class Day3 {
     }
   }
 
-  private int getPartNumber(ArrayList<Character> c) {
+  private void calcValidGears() {
+
+    // Hashmap format: "Star Coords": [adjacent number, adjacent number, ...]
+    //           e.g., "3,1" : [467, 35]
+    HashMap<String, ArrayList<Integer>> stars = new HashMap<String, ArrayList<Integer>>();
+
+    // if number is next to a star, get the star's coords
+    // store "star coords": [completed number]
+    // if a "star coords" key has an array with 2 numbers in it, it's a gear.
+
+    ArrayList<Character> num = new ArrayList<Character>();
+    ArrayList<ArrayList<Integer>> starList = new ArrayList<ArrayList<Integer>>();
+
+    // check every x,y, find numbers
+    for (int y = 0; y < grid.length(); y++) {
+      for (int x = 0; x < grid.width(); x++) {
+        char c = grid.getNodeValue(x, y);
+        if (grid.isDigit(c)) {
+          num.add(c);
+          for (ArrayList<Integer> coordSet : grid.getCoordsOfNeighboringStars(x,y)) {
+            starList.add(coordSet);
+          }
+        } else if (num.size() > 0) {
+          // store num
+          for (ArrayList<Integer> xyPair : starList) {
+            String key = Integer.toString(xyPair.get(0)) + "," + Integer.toString(xyPair.get(1));
+            if (!stars.containsKey(key)) {
+              stars.put(key, new ArrayList<Integer>(charArrayListToInteger(num)));
+            } else {
+              stars.get(key).add(charArrayListToInteger(num));
+            }
+          }
+          num.clear();
+        }
+      }
+    }
+
+    for (String starCoord : stars.keySet()) {
+      System.out.println("Star at: " + starCoord);
+      if (stars.get(starCoord).size() > 0) {
+        System.out.println("Neighbors: " + stars.get(starCoord));
+      }
+    }
+  }
+
+  private int charArrayListToInteger(ArrayList<Character> c) {
     String s = "";
     for (int i = 0; i < c.size(); i++) {
       s += c.get(i);
     }
     return Integer.parseInt(s);
-  }
-
-  private boolean adjacentToSpecial(int x, int y) {
-    boolean result = false;
-    for (CardinalDirection cd : CardinalDirection.values()) {
-      if (grid.traverseDirection(x, y, cd).size() > 0) {
-        result = result || grid.isSpecial(grid.traverseDirection(x,y, cd, 1).get(0));
-      }
-    }
-    return result;
   }
 
   private void buildGrid() {
@@ -64,16 +105,11 @@ public class Day3 {
     }
   }
 
-  private boolean isDigit(Character c) {
-    if ((c > 47 && c < 58)) return true;
-    return false;
-  }
-
   public int getPart1Result() {
     return partNumberSum;
   }
 
-  public int getPart2Result() {
+  public long getPart2Result() {
     return -1;
   }
 }

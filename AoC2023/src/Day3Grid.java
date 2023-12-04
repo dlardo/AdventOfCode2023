@@ -75,15 +75,35 @@ public class Day3Grid {
     return result;
   }
 
-  // returns list of Coordinates of special chars
-  public ArrayList<ArrayList<Integer>> getSpecialCoords() {
+  // returns list of Coordinates of stars chars
+  public ArrayList<ArrayList<Integer>> getStarCoords() {
     ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
     for (int y = 0; y < grid.size(); y++) {
       for (int x = 0; x < grid.get(y).size(); x++) {
         char c = grid.get(y).get(x);
-        if (isSpecial(c)) {
+        if (isStar(c)) {
           result.add(new ArrayList<>(Arrays.asList(x, y)));
         }
+      }
+    }
+    return result;
+  }
+
+  // Used for prototyping a solution. Should be deleted
+  public ArrayList<ArrayList<Integer>> getGearCoords() {
+    ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+    ArrayList<ArrayList<Integer>> starCoords = getStarCoords();
+    for (ArrayList<Integer> star : starCoords) {
+      ArrayList<Character> ajc = adjacentChars(star.get(0), star.get(1));
+      ArrayList<Character> nums = new ArrayList<Character>();
+      for (char c : ajc) {
+        if (isDigit(c)) nums.add(c);
+      }
+
+      if (nums.size() > 1) {
+        System.out.println("Oh no. " + nums.size() + " numbers adj to a star.");
+      } else {
+        System.out.println("Numbers adj to a gear: " + nums.size());
       }
     }
     return result;
@@ -98,6 +118,60 @@ public class Day3Grid {
       return true;
     }
     return false;
+  }
+
+  public boolean isStar(Character c) {
+    return (c == '*');
+  }
+
+  public boolean isDigit(Character c) {
+    if ((c > 47 && c < 58))
+      return true;
+    return false;
+  }
+
+  public boolean adjacentToSpecial(int x, int y) {
+    boolean result = false;
+    for (CardinalDirection cd : CardinalDirection.values()) {
+      if (traverseDirection(x, y, cd).size() > 0) {
+        result = result || isSpecial(traverseDirection(x, y, cd, 1).get(0));
+      }
+    }
+    return result;
+  }
+
+  public boolean adjacentToStar(int x, int y) {
+    boolean result = false;
+    for (CardinalDirection cd : CardinalDirection.values()) {
+      if (traverseDirection(x, y, cd).size() > 0) {
+        result = result || isStar(traverseDirection(x, y, cd, 1).get(0));
+      }
+    }
+    return result;
+  }
+
+  public ArrayList<ArrayList<Integer>> getCoordsOfNeighboringStars(int x, int y) {
+    ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+    for (CardinalDirection cd : CardinalDirection.values()) {
+      ArrayList<Character> traverseResult = traverseDirection(x, y, cd, 1);
+      if (traverseResult.size() > 0 && isStar(traverseResult.get(0))) {
+        int[] neighxy = getNeighborCoords(x, y, cd);
+        result.add(new ArrayList<Integer>(Arrays.asList(neighxy[0], neighxy[1])));
+      }
+    }
+    return result;
+  }
+
+  public ArrayList<Character> adjacentChars(int x, int y) {
+    ArrayList<Character> result = new ArrayList<>();
+    for (CardinalDirection cd : CardinalDirection.values()) {
+      if (traverseDirection(x, y, cd).size() > 0) {
+        char c = traverseDirection(x, y, cd, 1).get(0);
+        if (c != NULLCHAR)
+          result.add(c);
+      }
+    }
+    return result;
   }
 
   public int length() {
