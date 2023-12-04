@@ -3,8 +3,8 @@ import java.util.ArrayList;
 public class Day3 {
   String day = "day3";
   AoC aoc = new AoC();
-  ArrayList<String> data = aoc.getFile("data/" + day + "sample.txt");
-  //ArrayList<String> data = aoc.getFile("data/" + day + ".txt");
+  //ArrayList<String> data = aoc.getFile("data/" + day + "sample.txt");
+  ArrayList<String> data = aoc.getFile("data/" + day + ".txt");
   public static Character NULLCHAR = (char) 0;
   Day3Grid grid = new Day3Grid();
   int partNumberSum = 0;
@@ -46,16 +46,13 @@ public class Day3 {
   }
 
   private boolean adjacentToSpecial(int x, int y) {
-    return (
-    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.N, 1).get(0)) ||
-    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.S, 1).get(0)) ||
-    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.E, 1).get(0)) ||
-    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.W, 1).get(0)) ||
-    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.NE, 1).get(0)) ||
-    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.NW, 1).get(0)) ||
-    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.SE, 1).get(0)) ||
-    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.SW, 1).get(0))
-    );
+    boolean result = false;
+    for (CardinalDirection cd : CardinalDirection.values()) {
+      if (grid.traverseDirection(x, y, cd).size() > 0) {
+        result = result || grid.isSpecial(grid.traverseDirection(x,y, cd, 1).get(0));
+      }
+    }
+    return result;
   }
 
   private void buildGrid() {
