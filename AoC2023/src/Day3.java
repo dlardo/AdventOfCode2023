@@ -4,61 +4,76 @@ public class Day3 {
   String day = "day3";
   AoC aoc = new AoC();
   ArrayList<String> data = aoc.getFile("data/" + day + "sample.txt");
-  ArrayList<ArrayList<Day3Graph>> grid = new ArrayList<ArrayList<Day3Graph>>();
-  int gridWidth = 0;
-  int gridLength = 0;
-  Day3Graph origin = new Day3Graph();
+  //ArrayList<String> data = aoc.getFile("data/" + day + ".txt");
+  public static Character NULLCHAR = (char) 0;
+  Day3Grid grid = new Day3Grid();
+  int partNumberSum = 0;
 
   public Day3 () {
     System.out.println("Happy " + day + "!");
-    gridWidth = data.get(0).length();
-    gridLength = data.size();
+    buildGrid();
 
-    // grid is quadrant 1 x.y
-    //  2.0   2.1   2.2
-    //  1.0   1.1   1.2
-    //  0.0   0.1   0.2
+    // Find Valid Parts
+    boolean validPart = false;
+    ArrayList<Character> num = new ArrayList<Character>();
+    for (int y = 0; y < grid.length(); y++) {
+      for (int x = 0; x < grid.width(); x++) {
+        char c = grid.getNodeValue(x, y);
+        if (isDigit(c)) {
+          num.add(c);
+          if (adjacentToSpecial(x, y)) {
+            validPart = true;
+          }
+        // number is finished / NaN
+        } else if (num.size() > 0 && validPart) {
+          partNumberSum += getPartNumber(num);
+          num.clear();
+          validPart = false;
+        } else {
+          num.clear();
+          validPart = false;
+        }
+      }
+    }
+  }
 
-    // data is quadrant 1 but it's upside down from the file input
+  private int getPartNumber(ArrayList<Character> c) {
+    String s = "";
+    for (int i = 0; i < c.size(); i++) {
+      s += c.get(i);
+    }
+    return Integer.parseInt(s);
+  }
+
+  private boolean adjacentToSpecial(int x, int y) {
+    return (
+    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.N, 1).get(0)) ||
+    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.S, 1).get(0)) ||
+    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.E, 1).get(0)) ||
+    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.W, 1).get(0)) ||
+    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.NE, 1).get(0)) ||
+    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.NW, 1).get(0)) ||
+    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.SE, 1).get(0)) ||
+    grid.isSpecial(grid.traverseDirection(x,y, CardinalDirection.SW, 1).get(0))
+    );
+  }
+
+  private void buildGrid() {
+    // Load data into grid
     for (int y = 0; y < data.size(); y++) {
-      grid.add(new ArrayList<Day3Graph>());
-
-      for (int x = 0; x < gridWidth; x++) {
-        char c = data.get(y).charAt(x);
-        grid.get(y).add(new Day3Graph(x, y, c));
+      for (int x = 0; x < data.get(y).length(); x++) {
+        grid.addNode(x, y, data.get(y).charAt(x));
       }
-    }
-
-    origin = grid.get(0).get(0);
-
-    // printFirstColumn();
-    traverseFirstColumn();
-  }
-
-  private void printFirstColumn() {
-    for (int y = 0; y < grid.size(); y++) {
-      System.out.println(grid.get(y).get(0).val);
     }
   }
 
-  private void traverseFirstColumn() {
-    Day3Graph node = origin;
-
-    while (true) {
-      System.err.println(node.val);
-
-      if (node.s.get("y") < gridLength) {
-        int nextX = node.s.get("x");
-        int nextY = node.s.get("y");
-        node = grid.get(nextY).get(nextX);
-      } else {
-        break;
-      }
-    }
+  private boolean isDigit(Character c) {
+    if ((c > 47 && c < 58)) return true;
+    return false;
   }
 
   public int getPart1Result() {
-    return -1;
+    return partNumberSum;
   }
 
   public int getPart2Result() {
