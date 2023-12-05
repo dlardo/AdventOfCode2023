@@ -89,26 +89,6 @@ public class Day3Grid {
     return result;
   }
 
-  // Used for prototyping a solution. Should be deleted
-  public ArrayList<ArrayList<Integer>> getGearCoords() {
-    ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
-    ArrayList<ArrayList<Integer>> starCoords = getStarCoords();
-    for (ArrayList<Integer> star : starCoords) {
-      ArrayList<Character> ajc = adjacentChars(star.get(0), star.get(1));
-      ArrayList<Character> nums = new ArrayList<Character>();
-      for (char c : ajc) {
-        if (isDigit(c)) nums.add(c);
-      }
-
-      if (nums.size() > 1) {
-        System.out.println("Oh no. " + nums.size() + " numbers adj to a star.");
-      } else {
-        System.out.println("Numbers adj to a gear: " + nums.size());
-      }
-    }
-    return result;
-  }
-
   public boolean isSpecial(Character c) {
     if ((c > 32 && c < 46) ||
         (c == 47) ||

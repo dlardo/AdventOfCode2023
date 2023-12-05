@@ -46,9 +46,8 @@ public class Day3 {
   }
 
   private void calcGearCoords() {
-
     // format: "Star Coords": [adjacent number, adjacent number, ...]
-    //   e.g., 3,1: [467, 35]
+    //   e.g., "3,1": [467, 35]
     HashMap<String, Set<Integer>> stars = new HashMap<String, Set<Integer>>();
 
     // check every x,y, find numbers
@@ -87,7 +86,7 @@ public class Day3 {
       if (set.size() == 2) {
         Iterator<Integer> it = set.iterator();
         int subTotal = (it.next() * it.next());
-        System.out.println("Subtotal: " + subTotal);
+        // System.out.println("Subtotal: " + subTotal);
         gearRatioSum += subTotal;
       }
     }
