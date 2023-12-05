@@ -156,8 +156,12 @@ public class Day3Grid {
       ArrayList<Character> traverseResult = traverseDirection(x, y, cd, 1);
       if (traverseResult.size() > 0 && isStar(traverseResult.get(0))) {
         int[] neighxy = getNeighborCoords(x, y, cd);
+        // adding new (x,y) pair
         result.add(new ArrayList<Integer>(Arrays.asList(neighxy[0], neighxy[1])));
       }
+    }
+    if (result.size() > 1) {
+      System.out.println(x + ", " + y + " was next to multiple stars");
     }
     return result;
   }
