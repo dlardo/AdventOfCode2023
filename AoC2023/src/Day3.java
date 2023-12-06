@@ -13,14 +13,14 @@ import java.util.Set;
 public class Day3 {
   String day = "day3";
   AoC aoc = new AoC();
-  //ArrayList<String> data = aoc.getFile("data/" + day + "sample.txt");
+  // ArrayList<String> data = aoc.getFile("data/" + day + "sample.txt");
   ArrayList<String> data = aoc.getFile("data/" + day + ".txt");
   public static Character NULLCHAR = (char) 0;
   ArrayList<ArrayList<Character>> grid = new ArrayList<ArrayList<Character>>();
   int partNumberSum = 0;
   long gearRatioSum = 0;
 
-  public Day3 () {
+  public Day3() {
     System.out.println("Happy " + day + "!");
     buildGrid();
     calcValidParts();
@@ -38,7 +38,7 @@ public class Day3 {
           if (adjacentToSpecial(x, y)) {
             validPart = true;
           }
-        // number is finished / NaN
+          // number is finished / NaN
         } else if (num.size() > 0 && validPart) {
           partNumberSum += charArrayListToInteger(num);
           num.clear();
@@ -53,7 +53,7 @@ public class Day3 {
 
   private void calcGearCoords() {
     // format: "Star Coords": [adjacent number, adjacent number, ...]
-    //   e.g., "3,1": [467, 35]
+    // e.g., "3,1": [467, 35]
     HashMap<String, Set<Integer>> stars = new HashMap<String, Set<Integer>>();
 
     // check every x,y, find numbers
@@ -65,7 +65,7 @@ public class Day3 {
         if (isDigit(c)) {
           num.add(c);
           // if number is next to a star, get the star's coords
-          for (ArrayList<Integer> coordSet : getCoordsOfNeighboringStars(x,y)) {
+          for (ArrayList<Integer> coordSet : getCoordsOfNeighboringStars(x, y)) {
             // store "star coords": [completed number]
             starList.add(coordSet);
           }
@@ -86,7 +86,8 @@ public class Day3 {
       }
     }
 
-    // if a "star coords" key has an array with exactly 2 numbers in it, it's a gear.
+    // if a "star coords" key has an array with exactly 2 numbers in it, it's a
+    // gear.
     for (String coord : stars.keySet()) {
       Set<Integer> set = stars.get(coord);
       if (set.size() == 2) {
@@ -177,7 +178,8 @@ public class Day3 {
     return traverseDirection(x, y, cd, Integer.MAX_VALUE);
   }
 
-  // returns ArrayList of Chars adjacent to the starting point at x,y and direction indicated
+  // returns ArrayList of Chars adjacent to the starting point at x,y and
+  // direction indicated
   public ArrayList<Character> traverseDirection(int x, int y, CardinalDirection cd, int limit) {
     ArrayList<Character> result = new ArrayList<>();
     int[] c = getNeighborCoords(x, y, cd);
@@ -276,7 +278,8 @@ public class Day3 {
   }
 
   public int width() {
-    if (length() == 0) return 0;
+    if (length() == 0)
+      return 0;
     return grid.get(0).size();
   }
 }

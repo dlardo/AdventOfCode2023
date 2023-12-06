@@ -7,10 +7,14 @@ public class App {
     * Day2 d2 = new Day2();
     * System.out.println("Day2 P1: " + d2.getResult());
     * System.out.println("Day2 P2: " + d2.getPart2Result());
-    */
 
     Day3 d = new Day3();
     System.out.println(d.day + " P1: " + d.getPart1Result());
     System.out.println(d.day + " P2: " + d.getPart2Result());
+    */
+
+    Day4 d = new Day4();
+    System.out.println("Day " + d.day + " P1: " + d.getPart1Result());
+    System.out.println("Day " + d.day + " P2: " + d.getPart2Result());
   }
 }
