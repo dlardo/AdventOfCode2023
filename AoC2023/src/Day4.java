@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Day4 {
   String day = "4";
@@ -15,6 +16,8 @@ public class Day4 {
     System.out.println("https://adventofcode.com/2023/day/" + day);
 
     for (String line : data) {
+
+      System.out.print("Card " + getCardNumber(line) + ": ");
       Set<Integer> winners = getWinners(line);
       Set<Integer> yourNums = getYourNumbers(line);
       System.out.print("Winners: " + winners + " ");
@@ -35,6 +38,15 @@ public class Day4 {
       System.out.println("Score: " + subtotal);
       p1Points += subtotal;
     }
+  }
+
+  // public int getCardNumber(String data) {
+  public int getCardNumber(String data) {
+    String regex = " (\\d+): ";
+    Pattern p = Pattern.compile(regex);
+    Matcher m = p.matcher(data);
+    m.find();
+    return Integer.parseInt(m.group(1));
   }
 
   public Set<Integer> getWinners(String data) {
